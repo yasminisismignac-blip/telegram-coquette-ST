@@ -1,6 +1,10 @@
 /* =====================================================================
    TELEGRAM COQUETTE — tema para SillyTavern
+   v1.1 — barras nativas escondidas de forma garantida
+   Ordem: paleta → fundo → barras → header → bolhas → composer →
+          painéis → popups → detalhes → camada superior → mobile
    ===================================================================== */
+
 
 /* ---------------------------- 1. PALETA ---------------------------- */
 body.tgq-on {
@@ -21,8 +25,8 @@ body.tgq-on {
     --tgq-radius:    18px;
     --tgq-header-h:  64px;
 
-    /* truque: sobrescrever as variáveis nativas do SillyTavern
-       faz o tema "vazar" para TODOS os menus e popups de uma vez */
+    /* sobrescreve as variáveis nativas do SillyTavern:
+       o tema "vaza" para TODOS os menus, popups e drawers de uma vez */
     --SmartThemeBodyColor: #f7e8f0;
     --SmartThemeEmColor: #f4a7c9;
     --SmartThemeQuoteColor: #f4a7c9;
@@ -41,15 +45,27 @@ body.tgq-on {
 
 /* paletas alternativas */
 body.tgq-on[data-tgq-tint="lilac"] {
-    --tgq-bg: #14101c;  --tgq-panel: #211a2e;  --tgq-panel-2: #2a2139;
-    --tgq-line: #3a3050; --tgq-accent: #cbb2ff;
-    --tgq-out-a: #7f6bd6; --tgq-out-b: #63509f; --tgq-in: #2a2139;
+    --tgq-bg:     #14101c;
+    --tgq-panel:  #211a2e;
+    --tgq-panel-2:#2a2139;
+    --tgq-line:   #3a3050;
+    --tgq-accent: #cbb2ff;
+    --tgq-out-a:  #7f6bd6;
+    --tgq-out-b:  #63509f;
+    --tgq-in:     #2a2139;
 }
+
 body.tgq-on[data-tgq-tint="noir"] {
-    --tgq-bg: #0d0b0d;  --tgq-panel: #161216;  --tgq-panel-2: #1f191f;
-    --tgq-line: #2e252e; --tgq-accent: #ff8fc4;
-    --tgq-out-a: #d4477f; --tgq-out-b: #a52f5f; --tgq-in: #1f191f;
+    --tgq-bg:     #0d0b0d;
+    --tgq-panel:  #161216;
+    --tgq-panel-2:#1f191f;
+    --tgq-line:   #2e252e;
+    --tgq-accent: #ff8fc4;
+    --tgq-out-a:  #d4477f;
+    --tgq-out-b:  #a52f5f;
+    --tgq-in:     #1f191f;
 }
+
 
 /* ---------------------------- 2. FUNDO / WALLPAPER ---------------------------- */
 body.tgq-on #chat,
@@ -68,23 +84,45 @@ body.tgq-on #bg_custom {
     display: none !important;
 }
 
-/* ---------------------------- 3. ESCONDER A BARRA NATIVA ---------------------------- */
-body.tgq-on.tgq-hide-topbar #top-bar {
-    height: 0 !important;
-    min-height: 0 !important;
-    opacity: 0 !important;
-    overflow: hidden !important;
-    pointer-events: none !important;
-    border: none !important;
-    box-shadow: none !important;
+
+/* ---------------------------- 3. ESCONDER AS BARRAS NATIVAS ---------------------------- */
+/* zera a variável de layout do ST — evita o "buraco" no topo */
+body.tgq-on.tgq-hide-topbar {
+    --topBarBlockSize: 0px !important;
 }
 
-/* os botões continuam no DOM e clicáveis via JS */
+/* display:none é o único jeito 100% garantido */
+body.tgq-on.tgq-hide-topbar #top-bar,
+body.tgq-on.tgq-hide-topbar #top-settings-holder,
+body.tgq-on.tgq-hide-topbar #top-bar-container,
+body.tgq-on.tgq-hide-topbar .top-bar {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+    opacity: 0 !important;
+}
+
+/* com a barra oculta, a área do chat encosta no topo */
+body.tgq-on.tgq-hide-topbar #sheld {
+    top: 0 !important;
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+
 
 /* ---------------------------- 4. CABEÇALHO TELEGRAM ---------------------------- */
 #tgq-header {
     position: fixed;
-    top: 0; left: 0; right: 0;
+    top: 0;
+    left: 0;
+    right: 0;
     height: var(--tgq-header-h);
     display: none;              /* só aparece com o tema ligado */
     align-items: center;
@@ -93,11 +131,14 @@ body.tgq-on.tgq-hide-topbar #top-bar {
     background: linear-gradient(180deg, var(--tgq-panel-2), var(--tgq-panel));
     border-bottom: 1px solid var(--tgq-line);
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
-    z-index: 3000;
+    z-index: 4000;
     color: var(--tgq-text);
     backdrop-filter: blur(14px);
 }
-body.tgq-on #tgq-header { display: flex; }
+
+body.tgq-on #tgq-header {
+    display: flex;
+}
 
 .tgq-icon-btn {
     background: transparent;
@@ -105,22 +146,35 @@ body.tgq-on #tgq-header { display: flex; }
     color: var(--tgq-muted);
     font-size: 18px;
     line-height: 1;
-    width: 38px; height: 38px;
+    width: 38px;
+    height: 38px;
     border-radius: 50%;
     cursor: pointer;
     transition: background .15s, color .15s;
     flex: 0 0 auto;
 }
-.tgq-icon-btn:hover { background: rgba(244, 167, 201, 0.12); color: var(--tgq-accent); }
 
-.tgq-chat-info { display: flex; align-items: center; gap: 10px; flex: 1 1 auto; min-width: 0; }
+.tgq-icon-btn:hover {
+    background: rgba(244, 167, 201, 0.12);
+    color: var(--tgq-accent);
+}
+
+.tgq-chat-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1 1 auto;
+    min-width: 0;
+}
 
 .tgq-avatar {
-    width: 40px; height: 40px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     overflow: hidden;
     flex: 0 0 auto;
-    display: grid; place-items: center;
+    display: grid;
+    place-items: center;
     background: linear-gradient(135deg, var(--tgq-out-a), var(--tgq-out-b));
     color: #fff;
     font-weight: 700;
@@ -128,29 +182,53 @@ body.tgq-on #tgq-header { display: flex; }
     border: 2px solid rgba(244, 167, 201, 0.35);
     box-shadow: 0 0 0 3px rgba(244, 167, 201, 0.08);
 }
-.tgq-avatar img { width: 100%; height: 100%; object-fit: cover; }
 
-.tgq-titles { min-width: 0; }
+.tgq-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.tgq-titles {
+    min-width: 0;
+}
+
 .tgq-name {
     font-weight: 700;
     font-size: 15px;
     font-style: italic;
     letter-spacing: .2px;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
+
 .tgq-status {
     font-size: 12px;
     color: var(--tgq-accent);
     opacity: .85;
 }
-body.tgq-bot-typing .tgq-status { animation: tgq-pulse 1.2s ease-in-out infinite; }
-@keyframes tgq-pulse { 0%,100% { opacity: .45 } 50% { opacity: 1 } }
 
-.tgq-actions { position: relative; display: flex; align-items: center; gap: 2px; }
+body.tgq-bot-typing .tgq-status {
+    animation: tgq-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes tgq-pulse {
+    0%, 100% { opacity: .45; }
+    50%      { opacity: 1; }
+}
+
+.tgq-actions {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
 
 .tgq-dropdown {
     position: absolute;
-    right: 0; top: 46px;
+    right: 0;
+    top: 46px;
     min-width: 230px;
     display: none;
     flex-direction: column;
@@ -159,9 +237,13 @@ body.tgq-bot-typing .tgq-status { animation: tgq-pulse 1.2s ease-in-out infinite
     border: 1px solid var(--tgq-line);
     border-radius: 14px;
     box-shadow: 0 12px 32px rgba(0, 0, 0, 0.55);
-    z-index: 3100;
+    z-index: 4100;
 }
-.tgq-dropdown.open { display: flex; }
+
+.tgq-dropdown.open {
+    display: flex;
+}
+
 .tgq-dropdown button {
     text-align: left;
     background: transparent;
@@ -172,11 +254,20 @@ body.tgq-bot-typing .tgq-status { animation: tgq-pulse 1.2s ease-in-out infinite
     border-radius: 10px;
     cursor: pointer;
 }
-.tgq-dropdown button:hover { background: rgba(244, 167, 201, 0.14); }
+
+.tgq-dropdown button:hover {
+    background: rgba(244, 167, 201, 0.14);
+}
 
 /* espaço para o header fixo */
-body.tgq-on #chat { padding-top: calc(var(--tgq-header-h) + 10px) !important; }
-body.tgq-on #sheld { padding-top: 0 !important; }
+body.tgq-on #chat {
+    padding-top: calc(var(--tgq-header-h) + 10px) !important;
+}
+
+body.tgq-on #sheld {
+    padding-top: 0 !important;
+}
+
 
 /* ---------------------------- 5. BOLHAS ---------------------------- */
 body.tgq-on #chat .mes {
@@ -192,7 +283,10 @@ body.tgq-on #chat .mes {
     box-shadow: none !important;
     width: 100%;
 }
-body.tgq-on #chat .mes.is_user { flex-direction: row-reverse; }
+
+body.tgq-on #chat .mes.is_user {
+    flex-direction: row-reverse;
+}
 
 body.tgq-on .mesAvatarWrapper {
     flex: 0 0 auto;
@@ -200,18 +294,27 @@ body.tgq-on .mesAvatarWrapper {
     align-self: flex-end;
     padding-bottom: 2px;
 }
-body.tgq-on.tgq-avatars .mesAvatarWrapper { display: block !important; }
-body.tgq-on:not(.tgq-avatars) .mesAvatarWrapper { display: none !important; }
+
+body.tgq-on.tgq-avatars .mesAvatarWrapper {
+    display: block !important;
+}
+
+body.tgq-on:not(.tgq-avatars) .mesAvatarWrapper {
+    display: none !important;
+}
 
 body.tgq-on .mesAvatarWrapper .avatar {
-    width: 34px !important; height: 34px !important;
+    width: 34px !important;
+    height: 34px !important;
     border-radius: 50% !important;
     overflow: hidden !important;
     border: 2px solid rgba(244, 167, 201, 0.28) !important;
     box-shadow: none !important;
 }
+
 body.tgq-on .mesAvatarWrapper .avatar img {
-    width: 100% !important; height: 100% !important;
+    width: 100% !important;
+    height: 100% !important;
     object-fit: cover !important;
     border-radius: 50% !important;
     margin: 0 !important;
@@ -225,7 +328,10 @@ body.tgq-on .mes_block {
     min-width: 0;
     flex: 0 1 auto;
 }
-body.tgq-on .mes.is_user .mes_block { align-items: flex-end; }
+
+body.tgq-on .mes.is_user .mes_block {
+    align-items: flex-end;
+}
 
 /* nome do personagem (estilo grupo do Telegram) */
 body.tgq-on .ch_name {
@@ -237,10 +343,16 @@ body.tgq-on .ch_name {
     padding: 0 6px !important;
     margin: 0 !important;
 }
-body.tgq-on .mes.is_user .ch_name { display: none; }
+
+body.tgq-on .mes.is_user .ch_name {
+    display: none;
+}
+
 body.tgq-on .ch_name .mes_text_stamp,
 body.tgq-on .mesIDDisplay,
-body.tgq-on .tokenCounterDisplay { display: none !important; }
+body.tgq-on .tokenCounterDisplay {
+    display: none !important;
+}
 
 /* a bolha em si */
 body.tgq-on #chat .mes_text {
@@ -265,6 +377,7 @@ body.tgq-on #chat .mes.is_user .mes_text {
     color: var(--tgq-out-text) !important;
     border-bottom-right-radius: 6px !important;
 }
+
 body.tgq-on #chat .mes:not(.is_user) .mes_text {
     border-bottom-left-radius: 6px !important;
 }
@@ -273,16 +386,21 @@ body.tgq-on #chat .mes:not(.is_user) .mes_text {
 body.tgq-on.tgq-tails #chat .mes:not(.is_user):not(.is_system) .mes_text::after {
     content: "";
     position: absolute;
-    left: -6px; bottom: 0;
-    width: 12px; height: 12px;
+    left: -6px;
+    bottom: 0;
+    width: 12px;
+    height: 12px;
     background: var(--tgq-in);
     clip-path: polygon(100% 0, 100% 100%, 0 100%);
 }
+
 body.tgq-on.tgq-tails #chat .mes.is_user .mes_text::after {
     content: "";
     position: absolute;
-    right: -6px; bottom: 0;
-    width: 12px; height: 12px;
+    right: -6px;
+    bottom: 0;
+    width: 12px;
+    height: 12px;
     background: var(--tgq-out-b);
     clip-path: polygon(0 0, 100% 100%, 0 100%);
 }
@@ -291,6 +409,7 @@ body.tgq-on.tgq-tails #chat .mes.is_user .mes_text::after {
 body.tgq-on #chat .mes.is_system {
     justify-content: center;
 }
+
 body.tgq-on #chat .mes.is_system .mes_text {
     background: rgba(0, 0, 0, 0.4) !important;
     color: var(--tgq-muted) !important;
@@ -300,7 +419,10 @@ body.tgq-on #chat .mes.is_system .mes_text {
     padding: 5px 12px !important;
     max-width: 70%;
 }
-body.tgq-on #chat .mes.is_system .mesAvatarWrapper { display: none !important; }
+
+body.tgq-on #chat .mes.is_system .mesAvatarWrapper {
+    display: none !important;
+}
 
 /* horário */
 body.tgq-on .mes_timer,
@@ -318,18 +440,30 @@ body.tgq-on .mes_buttons {
     transition: opacity .18s ease;
     margin-top: 2px;
 }
+
 body.tgq-on .mes:hover .mes_buttons,
-body.tgq-on .mes.last_mes .mes_buttons { opacity: 1; }
+body.tgq-on .mes.last_mes .mes_buttons {
+    opacity: 1;
+}
+
 body.tgq-on .mes_buttons .mes_button {
     color: var(--tgq-muted) !important;
     opacity: .8;
     padding: 2px 4px;
 }
-body.tgq-on .mes_buttons .mes_button:hover { color: var(--tgq-accent) !important; opacity: 1; }
+
+body.tgq-on .mes_buttons .mes_button:hover {
+    color: var(--tgq-accent) !important;
+    opacity: 1;
+}
 
 /* swipe */
 body.tgq-on .swipe_left,
-body.tgq-on .swipe_right { color: var(--tgq-accent) !important; opacity: .7; }
+body.tgq-on .swipe_right {
+    color: var(--tgq-accent) !important;
+    opacity: .7;
+}
+
 
 /* ---------------------------- 6. COMPOSER ---------------------------- */
 body.tgq-on #form_sheld {
@@ -361,29 +495,48 @@ body.tgq-on #send_textarea {
     resize: none;
     max-height: 38vh;
 }
-body.tgq-on #send_textarea::placeholder { color: var(--tgq-muted) !important; opacity: .7; }
+
+body.tgq-on #send_textarea::placeholder {
+    color: var(--tgq-muted) !important;
+    opacity: .7;
+}
 
 body.tgq-on #leftSendForm,
-body.tgq-on #rightSendForm { display: flex; align-items: center; gap: 2px; }
+body.tgq-on #rightSendForm {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
 
 body.tgq-on #send_form .interactable,
 body.tgq-on #send_form .fa-solid,
-body.tgq-on #send_form .fa-regular { color: var(--tgq-muted) !important; }
+body.tgq-on #send_form .fa-regular {
+    color: var(--tgq-muted) !important;
+}
 
 body.tgq-on #send_but {
-    width: 38px !important; height: 38px !important;
+    width: 38px !important;
+    height: 38px !important;
     border-radius: 50% !important;
     background: linear-gradient(135deg, var(--tgq-accent), var(--tgq-accent-2)) !important;
     color: #3d1226 !important;
-    display: grid !important; place-items: center;
+    display: grid !important;
+    place-items: center;
     box-shadow: 0 2px 8px rgba(224, 122, 168, 0.45) !important;
     flex: 0 0 auto;
     transition: transform .12s ease;
 }
-body.tgq-on #send_but:hover { transform: scale(1.06); }
+
+body.tgq-on #send_but:hover {
+    transform: scale(1.06);
+}
+
 body.tgq-on #send_but .fa-solid,
 body.tgq-on #send_but .fa-regular,
-body.tgq-on #send_but i { color: #3d1226 !important; }
+body.tgq-on #send_but i {
+    color: #3d1226 !important;
+}
+
 
 /* ---------------------------- 7. PAINÉIS = "LISTA DE CONVERSAS" ---------------------------- */
 body.tgq-on #right-nav-panel,
@@ -400,17 +553,23 @@ body.tgq-on .group_select {
     padding: 8px 10px !important;
     transition: background .15s ease;
 }
+
 body.tgq-on .character_select:hover,
 body.tgq-on .group_select:hover {
     background: rgba(244, 167, 201, 0.10) !important;
 }
+
 body.tgq-on .character_select .avatar,
 body.tgq-on .group_select .avatar {
     border-radius: 50% !important;
     overflow: hidden !important;
     border: 2px solid rgba(244, 167, 201, 0.22) !important;
 }
-body.tgq-on .character_name_block { font-style: italic; }
+
+body.tgq-on .character_name_block {
+    font-style: italic;
+}
+
 
 /* ---------------------------- 8. POPUPS / DRAWERS / MENUS ---------------------------- */
 body.tgq-on .drawer-content,
@@ -431,6 +590,7 @@ body.tgq-on .menu_button_icon {
     background: var(--tgq-panel-2) !important;
     color: var(--tgq-text) !important;
 }
+
 body.tgq-on .menu_button:hover,
 body.tgq-on .menu_button_icon:hover {
     background: rgba(244, 167, 201, 0.14) !important;
@@ -447,6 +607,7 @@ body.tgq-on select {
     border-radius: 12px !important;
     color: var(--tgq-text) !important;
 }
+
 body.tgq-on .text_pole:focus,
 body.tgq-on textarea:focus {
     border-color: var(--tgq-accent) !important;
@@ -454,20 +615,27 @@ body.tgq-on textarea:focus {
     outline: none !important;
 }
 
+
 /* ---------------------------- 9. DETALHES COQUETTE ---------------------------- */
-body.tgq-on .mes_text a { color: var(--tgq-accent) !important; text-decoration: underline dotted; }
+body.tgq-on .mes_text a {
+    color: var(--tgq-accent) !important;
+    text-decoration: underline dotted;
+}
+
 body.tgq-on .mes_text code {
     background: rgba(0, 0, 0, 0.35) !important;
     border-radius: 6px;
     padding: 1px 5px;
     color: var(--tgq-accent) !important;
 }
+
 body.tgq-on .mes_text pre {
     background: rgba(0, 0, 0, 0.45) !important;
     border: 1px solid var(--tgq-line) !important;
     border-radius: 12px !important;
     padding: 10px !important;
 }
+
 body.tgq-on .mes_text blockquote {
     border-left: 3px solid var(--tgq-accent) !important;
     background: rgba(244, 167, 201, 0.08) !important;
@@ -475,28 +643,55 @@ body.tgq-on .mes_text blockquote {
     padding: 4px 10px;
     margin: 6px 0;
 }
-body.tgq-on .mes_text strong { color: var(--tgq-accent); }
+
+body.tgq-on .mes_text strong {
+    color: var(--tgq-accent);
+}
+
 body.tgq-on .mes_text hr {
     border: none;
     border-top: 1px dashed rgba(244, 167, 201, 0.25);
 }
 
 /* scrollbar */
-body.tgq-on ::-webkit-scrollbar { width: 10px; height: 10px; }
-body.tgq-on ::-webkit-scrollbar-track { background: transparent; }
+body.tgq-on ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+body.tgq-on ::-webkit-scrollbar-track {
+    background: transparent;
+}
+
 body.tgq-on ::-webkit-scrollbar-thumb {
     background: rgba(244, 167, 201, 0.22);
     border-radius: 10px;
     border: 2px solid transparent;
     background-clip: content-box;
 }
-body.tgq-on ::-webkit-scrollbar-thumb:hover { background: rgba(244, 167, 201, 0.4); background-clip: content-box; }
 
-/* FAB */
+body.tgq-on ::-webkit-scrollbar-thumb:hover {
+    background: rgba(244, 167, 201, 0.4);
+    background-clip: content-box;
+}
+
+
+/* ---------------------------- 10. CAMADA SUPERIOR ---------------------------- */
+#tgq-header {
+    z-index: 4000 !important;
+}
+
+#tgq-fab {
+    z-index: 3999 !important;
+}
+
+/* FAB (botão flutuante 🎀) */
 #tgq-fab {
     position: fixed;
-    right: 16px; bottom: 108px;
-    width: 46px; height: 46px;
+    right: 16px;
+    bottom: 108px;
+    width: 46px;
+    height: 46px;
     border-radius: 50%;
     border: 1px solid rgba(244, 167, 201, 0.35);
     background: linear-gradient(135deg, #b95c8b, #8f4570);
@@ -505,15 +700,40 @@ body.tgq-on ::-webkit-scrollbar-thumb:hover { background: rgba(244, 167, 201, 0.
     display: none;
     place-items: center;
     cursor: pointer;
-    z-index: 2900;
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
     transition: transform .15s ease;
 }
-body.tgq-on #tgq-fab { display: grid; }
-#tgq-fab:hover { transform: scale(1.08) rotate(-6deg); }
 
-/* mobile */
+body.tgq-on #tgq-fab {
+    display: grid;
+}
+
+#tgq-fab:hover {
+    transform: scale(1.08) rotate(-6deg);
+}
+
+/* item separador do dropdown */
+.tgq-dropdown button.tgq-sep {
+    border-top: 1px solid var(--tgq-line);
+    margin-top: 4px;
+    padding-top: 12px;
+    color: var(--tgq-accent);
+}
+
+
+/* ---------------------------- 11. MOBILE ---------------------------- */
 @media (max-width: 640px) {
-    body.tgq-on #chat .mes_text { max-width: 82vw; font-size: 14.5px; }
-    .tgq-titles { max-width: 45vw; }
+    body.tgq-on #chat .mes_text {
+        max-width: 82vw;
+        font-size: 14.5px;
+    }
+
+    .tgq-titles {
+        max-width: 45vw;
+    }
+
+    #tgq-fab {
+        bottom: 96px;
+        right: 12px;
+    }
 }
