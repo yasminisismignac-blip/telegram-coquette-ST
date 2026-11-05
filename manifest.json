@@ -1,0 +1,11 @@
+{
+  "display_name": "Telegram Coquette 🎀",
+  "loading_order": 210,
+  "requires": [],
+  "optional": [],
+  "js": "index.js",
+  "css": "style.css",
+  "author": "SEU_USUARIO",
+  "version": "1.0.0",
+  "homePage": "https://github.com/SEU_USUARIO/sillytavern-telegram-coquette"
+}
